@@ -2,11 +2,16 @@ package dev.denismasterherobrine.magicalforest.biome;
 
 import dev.denismasterherobrine.magicalforest.features.FancyOakTreeFeature;
 import dev.denismasterherobrine.magicalforest.util.ColorConstants;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class MagicalForestBiomeDecorator {
 
@@ -16,15 +21,13 @@ public class MagicalForestBiomeDecorator {
         return Mth.hsvToRgb(0.6325F - f * 0.1F, 0.44F + f * 0.11F, 1F);
     }
 
-    private static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
-    {
+    private static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder) {
         return biome(precipitation, temperature, downfall, ColorConstants.STANDARD_WATER, ColorConstants.STANDARD_WATERFOG, ColorConstants.MAGICAL_FOREST_FOLIAGE_COLOR, ColorConstants.MAGICAL_FOREST_GRASS_COLOR, spawnBuilder, biomeBuilder);
     }
 
-    private static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, int waterColor, int waterFogColor, int grassColor, int foliageColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
-    {
+    private static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, int waterColor, int waterFogColor, int grassColor, int foliageColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder) {
         return (new Biome.BiomeBuilder())
-                .precipitation(precipitation)
+                // .precipitation(precipitation)
                 .temperature(temperature)
                 .downfall(downfall)
                 .specialEffects((new BiomeSpecialEffects.Builder())
@@ -41,9 +44,11 @@ public class MagicalForestBiomeDecorator {
                 .build();
     }
 
-    public static Biome decorateMagicalForest() {
+    public static Biome decorateMagicalForest(BootstapContext<Biome> pContext) {
+        HolderGetter<PlacedFeature> holdergetter = pContext.lookup(Registries.PLACED_FEATURE);
+        HolderGetter<ConfiguredWorldCarver<?>> holdergetter1 = pContext.lookup(Registries.CONFIGURED_CARVER);
         MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
-        BiomeGenerationSettings.Builder biomeFeatures = new BiomeGenerationSettings.Builder();
+        BiomeGenerationSettings.Builder biomeFeatures = new BiomeGenerationSettings.Builder(holdergetter, holdergetter1);
 
         spawnSettings.addSpawn(MobCategory.AMBIENT, new MobSpawnSettings.SpawnerData(EntityType.BAT, 10, 8, 8));
         spawnSettings.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(EntityType.SHEEP, 12, 4, 4));
@@ -89,7 +94,6 @@ public class MagicalForestBiomeDecorator {
         BiomeDefaultFeatures.addDefaultExtraVegetation(biomeFeatures);
         BiomeDefaultFeatures.addCommonBerryBushes(biomeFeatures);
         BiomeDefaultFeatures.addJungleMelons(biomeFeatures);
-
 
 
         FancyOakTreeFeature.addFancyOakTrees(biomeFeatures);

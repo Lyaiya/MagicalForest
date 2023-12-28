@@ -7,7 +7,7 @@ plugins {
 
 version = "${minecraft_version}-${mod_version}"
 group = mod_group_id
-base.archivesName = 'MagicalForest-forge'
+base.archivesName = mod_archives_name
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 

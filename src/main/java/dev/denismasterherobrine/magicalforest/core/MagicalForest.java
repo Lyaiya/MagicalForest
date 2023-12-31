@@ -16,6 +16,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import terrablender.core.TerraBlenderForge;
 
 @Mod(MagicalForest.MOD_ID)
 public class MagicalForest {
@@ -41,7 +42,9 @@ public class MagicalForest {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        ModBiomes.setupTerraBlender();
+        event.enqueueWork(() -> {
+            ModBiomes.setupTerraBlender();
+        });
     }
 
     private void loadComplete(final FMLLoadCompleteEvent event) {
